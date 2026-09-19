@@ -1,48 +1,49 @@
-﻿# Medical Imaging Explorer 🔬
+# Medical Imaging Explorer
 
-An interactive image processing and computer vision exploration tool built with **Python**, **Streamlit**, and **OpenCV**.
+An image processing and analysis tool built with Python, OpenCV, and Streamlit.
 
-> [!IMPORTANT]
-> **Educational & Learning Disclaimer**:
-> This software is created exclusively for educational, research, and algorithmic demonstration purposes. It is **NOT** a medical device and is **NOT** intended for clinical diagnosis, patient evaluation, treatment planning, or any medical decision-making.
-
----
-
-## 🌟 Key Features
-
-- **Image Ingestion**: Upload custom DICOM exports, PNG, JPEG, or JPG images, or explore using the built-in sample imaging test pattern.
-- **Enhancement & Preprocessing**:
-  - Dynamic Brightness and Contrast adjustments via PIL.
-  - Convolutional 2D Laplacian Sharpening via OpenCV custom kernels.
-  - Grayscale conversion and adjustable Gaussian Blur filtering.
-- **Edge Detection & Segmentation**:
-  - Canny Edge Detection with gradient-based boundary localization.
-  - **Automatic Otsu Thresholding** for bimodal histogram binarization.
-  - **Manual Thresholding** with interactive slider controls.
-- **Morphological & Object Analysis**:
-  - Contour detection (cv2.findContours) on binarized segmentations.
-  - Object-area filtering to eliminate noise and small artifacts.
-  - Filtered object counting and area quantification.
-  - White-pixel percentage calculation (tissue/feature density indicator).
-- **Region of Interest (ROI) Analysis**:
-  - Configurable ROI bounding box (size and spatial coordinates).
-  - High-resolution cropped ROI preview.
-  - Localized ROI statistical metrics and intensity distributions.
-- **Image Statistics & Distribution**:
-  - Comprehensive statistical cards: Mean, Standard Deviation, Minimum, and Maximum pixel values.
-  - Global vs. ROI pixel-intensity histograms with Matplotlib.
+> [!NOTE]
+> This project was developed to learn and experiment with image processing and computer vision concepts. It is not intended for medical diagnosis, clinical evaluation, or treatment planning.
 
 ---
 
-## 🚀 Quick Start (Local Setup)
+## Features
+
+- **Image Loading**: Supports PNG, JPG, and JPEG image uploads, plus a built-in sample phantom for testing.
+- **Image Adjustments**:
+  - Brightness and contrast adjustments via PIL.
+  - Sharpening using an OpenCV 3x3 Laplacian convolution kernel.
+- **Preprocessing and Edge Detection**:
+  - Grayscale conversion.
+  - Gaussian blur with adjustable odd kernel size.
+  - Canny edge detection.
+- **Segmentation**:
+  - Manual thresholding.
+  - Automatic Otsu thresholding.
+- **Object Analysis**:
+  - External contour detection using OpenCV.
+  - Minimum object area filtering.
+  - Detected and filtered object counts.
+  - White pixel percentage calculation.
+- **Region of Interest (ROI)**:
+  - Adjustable bounding box (size and coordinates).
+  - Cropped ROI view.
+  - Localized pixel intensity statistics.
+- **Statistics and Histograms**:
+  - Mean, standard deviation, min, and max intensity for both the full image and the selected ROI.
+  - Pixel intensity histograms (256 bins) plotted with Matplotlib.
+
+---
+
+## Local Setup
 
 ### 1. Prerequisites
-- Python 3.9+ installed on your system.
-- Git.
+- Python 3.9 or higher
+- Git
 
 ### 2. Clone the Repository
 `ash
-git clone https://github.com/<your-username>/medical-imaging-explorer.git
+git clone https://github.com/epsilon6767/medical-imaging-explorer.git
 cd medical-imaging-explorer
 `
 
@@ -62,38 +63,37 @@ source .venv/bin/activate
 pip install -r requirements.txt
 `
 
-### 5. Launch the Application
+### 5. Run the Application
 `ash
 streamlit run app.py
 `
-The application will automatically open in your default browser at http://localhost:8501.
+
+The app will open in your browser at http://localhost:8501.
 
 ---
 
-## 🌐 Deploying to Streamlit Community Cloud
+## Deployment to Streamlit Community Cloud
 
-This project is pre-configured for seamless deployment to **Streamlit Community Cloud**:
-
-1. Push this repository to your **GitHub** account.
-2. Visit [share.streamlit.io](https://share.streamlit.io/) and log in with your GitHub account.
-3. Click **New app**.
-4. Select your repository, branch (main), and set **Main file path** to:
-   `	ext
-   app.py
+1. Push this repository to GitHub:
+   `ash
+   git push -u origin main
    `
+2. Go to [share.streamlit.io](https://share.streamlit.io/) and sign in with GitHub.
+3. Click **New app**.
+4. Set:
+   - **Repository**: epsilon6767/medical-imaging-explorer
+   - **Branch**: main
+   - **Main file path**: pp.py
 5. Click **Deploy!**
 
 ---
 
-## 📦 Tech Stack & Dependencies
+## Dependencies
 
-- **Streamlit**: Web interface and interactive component state management.
-- **OpenCV (opencv-python-headless)**: High-performance computer vision algorithms (Canny, Otsu, Gaussian Blur, 2D Filtering, Contours).
-- **NumPy**: Matrix operations and statistical calculations.
-- **Pillow (PIL)**: Image loading, enhancement, and bounding-box drawing.
-- **Matplotlib**: Statistical intensity histogram generation.
-
----
-
-## 📄 License
-This project is open-source and available under the [MIT License](LICENSE).
+- streamlit
+- opencv-python-headless
+- 
+umpy
+- pillow
+- matplotlib
+- pandas
