@@ -1,9 +1,6 @@
 """
 Medical Imaging Explorer
 An image processing and analysis tool built with Python, OpenCV, and Streamlit.
-
-Note: This project is developed for learning image processing and computer vision.
-It is not intended for clinical or diagnostic use.
 """
 
 import os
@@ -18,12 +15,10 @@ import streamlit as st
 def load_image(uploaded_file, sample_path=None) -> Image.Image:
     """Load an image from upload or file path and convert to RGB."""
     if uploaded_file is not None:
-        img = Image.open(uploaded_file)
+        return Image.open(uploaded_file).convert("RGB")
     elif sample_path and os.path.exists(sample_path):
-        img = Image.open(sample_path)
-    else:
-        return None
-    return img.convert("RGB")
+        return Image.open(sample_path).convert("RGB")
+    return None
 
 
 def apply_enhancements(
@@ -158,7 +153,19 @@ def main():
     st.title("Medical Imaging Explorer")
     st.caption("Image processing and analysis tool built with OpenCV and Streamlit")
 
-    st.info("Note: This project is for learning image processing and computer vision concepts. It is not intended for clinical or diagnostic use.")
+    # --------------------------------------------------------------------------
+    # Static Example / Illustration Section
+    # --------------------------------------------------------------------------
+    with st.expander("Example Pipeline Stages", expanded=True):
+        col_ex1, col_ex2, col_ex3, col_ex4 = st.columns(4)
+        with col_ex1:
+            st.image("examples/01_original_xray.png", caption="Original X-ray", use_container_width=True)
+        with col_ex2:
+            st.image("examples/02_canny_edges.png", caption="Canny Edges", use_container_width=True)
+        with col_ex3:
+            st.image("examples/03_thresholded_image.png", caption="Thresholded Image", use_container_width=True)
+        with col_ex4:
+            st.image("examples/04_contours.png", caption="Contours", use_container_width=True)
 
     # --------------------------------------------------------------------------
     # Sidebar
@@ -169,16 +176,15 @@ def main():
         type=["png", "jpg", "jpeg"]
     )
 
-    sample_image_path = "sample_images/sample_chest_phantom.png"
-    use_sample = False
-    if uploaded_file is None:
-        if os.path.exists(sample_image_path):
-            use_sample = st.sidebar.checkbox("Use sample image", value=True)
+    example_xray_path = "examples/01_original_xray.png"
+    use_example = False
+    if uploaded_file is None and os.path.exists(example_xray_path):
+        use_example = st.sidebar.checkbox("Use example X-ray for live processing", value=True)
 
-    image = load_image(uploaded_file, sample_image_path if use_sample else None)
+    image = load_image(uploaded_file, example_xray_path if use_example else None)
 
     if image is None:
-        st.warning("Upload an image or select the sample image in the sidebar.")
+        st.info("Upload an image or check 'Use example X-ray for live processing' in the sidebar to run the live pipeline.")
         return
 
     with st.sidebar.expander("Image Adjustments", expanded=True):
@@ -255,7 +261,7 @@ def main():
     roi_stats = compute_statistics(roi_pixels)
 
     # --------------------------------------------------------------------------
-    # Main Tabs
+    # Main Tabs for Live Processing Outputs
     # --------------------------------------------------------------------------
     tab_images, tab_segmentation, tab_roi, tab_stats = st.tabs([
         "Images",
@@ -266,10 +272,10 @@ def main():
 
     # --- Tab 1: Images ---
     with tab_images:
-        st.subheader("Images")
+        st.subheader("Live Images")
         col_orig, col_proc = st.columns(2)
         with col_orig:
-            st.image(image, caption="Original Image", use_container_width=True)
+            st.image(image, caption="Current Input Image", use_container_width=True)
         with col_proc:
             st.image(processed_image, caption="Processed Image", use_container_width=True)
 
@@ -280,7 +286,7 @@ def main():
         if not detect_edges:
             st.info("Segmentation pipeline is disabled. Enable it in the sidebar.")
         else:
-            st.subheader("Segmentation")
+            st.subheader("Live Segmentation")
 
             m1, m2, m3, m4 = st.columns(4)
             m1.metric("Threshold", active_threshold)
@@ -315,7 +321,7 @@ def main():
 
     # --- Tab 3: ROI ---
     with tab_roi:
-        st.subheader("ROI")
+        st.subheader("Live ROI")
         col_full, col_zoom = st.columns([2, 1])
 
         with col_full:
@@ -330,7 +336,7 @@ def main():
 
     # --- Tab 4: Statistics ---
     with tab_stats:
-        st.subheader("Statistics")
+        st.subheader("Live Statistics")
 
         stat_col1, stat_col2 = st.columns(2)
 

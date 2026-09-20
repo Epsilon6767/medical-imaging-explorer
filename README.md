@@ -2,14 +2,12 @@
 
 An image processing and analysis tool built with Python, OpenCV, and Streamlit.
 
-> [!NOTE]
-> This project was developed to learn and experiment with image processing and computer vision concepts. It is not intended for medical diagnosis, clinical evaluation, or treatment planning.
-
 ---
 
 ## Features
 
-- **Image Loading**: Supports PNG, JPG, and JPEG image uploads, plus a built-in sample phantom for testing.
+- **Pipeline Stages Preview**: Reference examples of Original X-ray, Canny Edges, Thresholded Image, and Contours.
+- **Image Loading**: Supports PNG, JPG, and JPEG image uploads, plus option to test using the reference X-ray.
 - **Image Adjustments**:
   - Brightness and contrast adjustments via PIL.
   - Sharpening using an OpenCV 3x3 Laplacian convolution kernel.
