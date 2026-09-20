@@ -195,33 +195,31 @@ def main():
         if show_explanations:
             st.caption(
                 "Adjusts the overall intensity of the image. "
-                "Useful when the image is too dark or too bright and details are difficult to see. "
-                "Example: increase brightness slightly when darker regions are difficult to inspect."
+                "It is useful when the image is too dark or too bright and details are difficult to see. "
+                "Try small changes first and compare the result with the original."
             )
 
         contrast = st.slider("Contrast", 0.1, 3.0, 1.0, 0.1)
         if show_explanations:
             st.caption(
                 "Changes the difference between dark and bright regions. "
-                "Useful when structures blend together because the image has low contrast. "
-                "Example: increase contrast when intensity differences are difficult to distinguish. "
-                "Tip: very high contrast can make subtle intensity differences harder to interpret."
+                "It is useful when structures blend together because the image has low contrast. "
+                "Increase it gradually and watch whether important intensity differences become easier to see."
             )
 
         sharpen_strength = st.slider("Sharpen", 0.0, 3.0, 0.0, 0.05)
         if show_explanations:
             st.caption(
                 "Emphasizes fine details and edges. "
-                "Useful when the image appears soft and boundaries are not very clear. "
-                "Example: apply a small amount of sharpening when structures look slightly blurred. "
-                "Tip: strong sharpening can also emphasize noise and unwanted edges."
+                "It is useful when the image appears slightly soft or boundaries are difficult to see. "
+                "Use moderate values because strong sharpening can also make noise and unwanted edges more visible."
             )
 
     with st.sidebar.expander("Segmentation", expanded=True):
         detect_edges = st.checkbox("Enable segmentation pipeline", value=True)
         if show_explanations:
             st.caption(
-                "Runs Gaussian blur, Canny edge detection, thresholding, and contour analysis on the current image. "
+                "Runs the full segmentation pipeline: Gaussian blur, Canny edge detection, thresholding, and contour analysis. "
                 "Disable to view only the adjusted image without segmentation output."
             )
 
@@ -229,31 +227,25 @@ def main():
         if show_explanations:
             st.caption(
                 "Smooths the image and reduces small intensity variations. "
-                "Useful before edge detection when image noise creates many unwanted edges. "
-                "Example: apply a small blur to a noisy image before running Canny edge detection. "
-                "Tip: more blur produces a smoother result but can remove fine details. "
-                "Pipeline: Gaussian blur feeds directly into Canny edge detection."
+                "It is useful before edge detection when noise creates many unwanted edges. "
+                "Try a small blur first; too much smoothing can remove fine details."
             )
 
         auto_threshold = st.checkbox("Use Otsu thresholding", value=False)
         if show_explanations:
             st.caption(
                 "Automatically selects a global threshold from the image intensity distribution. "
-                "Useful when you are unsure which manual threshold to choose. "
-                "Example: use Otsu as a starting point, then compare its result with a manually selected threshold. "
-                "Tip: Otsu is most useful when the image contains reasonably distinct intensity groups."
+                "It is useful when you are not sure which manual threshold to start with. "
+                "Compare the Otsu result with manual thresholding to see how the selected regions change."
             )
 
         if not auto_threshold:
             manual_threshold = st.slider("Threshold", 0, 255, 128, 1)
             if show_explanations:
                 st.caption(
-                    "Separates brighter pixels from darker pixels using an intensity cutoff. "
+                    "Separates pixels according to their intensity and produces a binary image. "
                     "Pixels above the threshold become white; pixels below become black. "
-                    "Useful when you want to isolate regions based on pixel intensity. "
-                    "Example: move the threshold until the region you want to isolate is clearly separated from the background. "
-                    "Tip: changing the threshold can strongly change which regions are detected. "
-                    "Pipeline: the thresholded image is used directly by contour detection."
+                    "Move the threshold gradually and watch how the selected regions change."
                 )
         else:
             manual_threshold = 128
@@ -262,11 +254,9 @@ def main():
         min_area = st.slider("Minimum object area", 0, 1000, 100, 5)
         if show_explanations:
             st.caption(
-                "Filters out detected regions smaller than the selected area. "
-                "Useful when thresholding produces many small unwanted regions or noise. "
-                "Example: increase the minimum area to remove tiny isolated regions. "
-                "Tip: if valid small regions disappear, reduce the minimum area. "
-                "Pipeline: applied after contour detection to remove regions below this size."
+                "Removes detected regions smaller than the selected area. "
+                "It is useful when thresholding produces many tiny unwanted regions. "
+                "Increase the value to remove more small regions, or reduce it when smaller regions need to be kept."
             )
 
     # Image Processing Pipeline
@@ -307,9 +297,8 @@ def main():
         if show_explanations:
             st.caption(
                 "Selects a smaller region of the image for focused analysis. "
-                "Useful when the whole image contains areas that are not relevant to the analysis. "
-                "Example: select one region and compare its intensity statistics with the full image. "
-                "Pipeline: ROI statistics and histogram in the Statistics tab apply only to this selected area."
+                "It is useful when the whole image contains areas that are not relevant to the measurement you want to make. "
+                "For example, select one region and compare its statistics with the full image."
             )
 
         max_x = max(0, img_width - roi_size)
@@ -374,10 +363,9 @@ def main():
                 st.image(edges, caption="Canny Edges", use_container_width=True)
                 if show_explanations:
                     st.caption(
-                        "Detects boundaries where image intensity changes rapidly. "
-                        "Useful when you want to highlight structural edges and boundaries. "
-                        "Example: use Canny to make the boundaries of structures easier to inspect. "
-                        "Tip: if the edge image contains many unwanted small edges, try increasing Gaussian blur first."
+                        "Highlights boundaries where image intensity changes rapidly. "
+                        "It is useful when you want to inspect structural edges in the image. "
+                        "If the result contains too many small unwanted edges, try applying more smoothing before Canny."
                     )
             with col_bin:
                 st.image(binary_mask, caption=f"Thresholded Image (Threshold: {active_threshold})", use_container_width=True)
@@ -386,9 +374,8 @@ def main():
                 if show_explanations:
                     st.caption(
                         "Finds boundaries of connected regions in the processed image. "
-                        "Useful when you want to identify, measure, or filter detected regions. "
-                        "Example: use contours to compare the areas of connected regions after thresholding. "
-                        "Tip: contour results depend strongly on the thresholded image and the object-area filter."
+                        "It is useful when you want to identify or measure detected regions after thresholding. "
+                        "The number and size of detected contours depend on the quality of the preceding image processing."
                     )
 
             st.divider()
@@ -428,11 +415,9 @@ def main():
 
         if show_explanations:
             st.caption(
-                "Summarizes pixel intensity values across the image. "
-                "Useful when you want to compare image regions quantitatively. "
-                "Example: compare the mean and standard deviation of an ROI with the full image. "
-                "The histogram shows how pixel intensities are distributed, which is useful for understanding brightness, "
-                "contrast, and the separation of intensity regions before choosing a threshold."
+                "Summarizes pixel intensity values in the selected region. "
+                "It is useful when you want to compare image regions numerically rather than relying only on visual inspection. "
+                "Compare the ROI statistics with the corresponding values for the full image."
             )
 
         stat_col1, stat_col2 = st.columns(2)
@@ -450,8 +435,9 @@ def main():
             plt.close(fig_global)
             if show_explanations:
                 st.caption(
-                    "Global histogram: shows the intensity distribution of the entire image. "
-                    "Use it to see whether the image contains distinct groups of intensity values before choosing a threshold."
+                    "Shows how pixel intensities are distributed across the entire image. "
+                    "It is useful for understanding brightness, contrast, and whether intensity groups appear separated. "
+                    "The histogram can also help when choosing a manual threshold."
                 )
 
         with stat_col2:
@@ -467,7 +453,7 @@ def main():
             plt.close(fig_roi)
             if show_explanations:
                 st.caption(
-                    "ROI histogram: shows the intensity distribution of the selected region only. "
+                    "Shows how pixel intensities are distributed within the selected region. "
                     "Compare it with the global histogram to see how the selected area differs from the whole image."
                 )
 
