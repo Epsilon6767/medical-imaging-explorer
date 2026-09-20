@@ -1,4 +1,4 @@
-# Medical Imaging Explorer
+﻿# Medical Imaging Explorer
 
 An image processing and analysis tool built with Python, OpenCV, and Streamlit.
 
@@ -7,7 +7,7 @@ An image processing and analysis tool built with Python, OpenCV, and Streamlit.
 ## Features
 
 - **Pipeline Stages Preview**: Reference examples of Original X-ray, Canny Edges, Thresholded Image, and Contours.
-- **Image Loading**: Supports PNG, JPG, and JPEG image uploads, plus option to test using the reference X-ray.
+- **Image Loading**: Supports PNG, JPG, and JPEG image uploads, plus an option to use the reference X-ray.
 - **Image Adjustments**:
   - Brightness and contrast adjustments via PIL.
   - Sharpening using an OpenCV 3x3 Laplacian convolution kernel.
@@ -40,13 +40,15 @@ An image processing and analysis tool built with Python, OpenCV, and Streamlit.
 - Git
 
 ### 2. Clone the Repository
-`ash
+
+```bash
 git clone https://github.com/epsilon6767/medical-imaging-explorer.git
 cd medical-imaging-explorer
-`
+```
 
 ### 3. Create a Virtual Environment
-`ash
+
+```bash
 # Windows
 python -m venv .venv
 .\.venv\Scripts\activate
@@ -54,17 +56,19 @@ python -m venv .venv
 # macOS / Linux
 python3 -m venv .venv
 source .venv/bin/activate
-`
+```
 
 ### 4. Install Dependencies
-`ash
-pip install -r requirements.txt
-`
+
+```bash
+python -m pip install -r requirements.txt
+```
 
 ### 5. Run the Application
-`ash
+
+```bash
 streamlit run app.py
-`
+```
 
 The app will open in your browser at http://localhost:8501.
 
@@ -73,15 +77,15 @@ The app will open in your browser at http://localhost:8501.
 ## Deployment to Streamlit Community Cloud
 
 1. Push this repository to GitHub:
-   `ash
+   ```bash
    git push -u origin main
-   `
+   ```
 2. Go to [share.streamlit.io](https://share.streamlit.io/) and sign in with GitHub.
 3. Click **New app**.
 4. Set:
    - **Repository**: epsilon6767/medical-imaging-explorer
    - **Branch**: main
-   - **Main file path**: pp.py
+   - **Main file path**: app.py
 5. Click **Deploy!**
 
 ---
@@ -90,8 +94,7 @@ The app will open in your browser at http://localhost:8501.
 
 - streamlit
 - opencv-python-headless
-- 
-umpy
+- numpy
 - pillow
 - matplotlib
 - pandas
