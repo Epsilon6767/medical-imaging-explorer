@@ -181,6 +181,9 @@ def main():
     if uploaded_file is None and os.path.exists(example_xray_path):
         use_example = st.sidebar.checkbox("Use example X-ray for live processing", value=True)
 
+    # Global toggle for optional explanatory help text
+    show_explanations = st.sidebar.checkbox("Show explanations", value=False)
+
     image = load_image(uploaded_file, example_xray_path if use_example else None)
 
     if image is None:
@@ -189,21 +192,41 @@ def main():
 
     with st.sidebar.expander("Image Adjustments", expanded=True):
         brightness = st.slider("Brightness", 0.1, 3.0, 1.0, 0.1)
+        if show_explanations:
+            st.caption("Multiplies every pixel value. Values below 1.0 darken the image; values above 1.0 brighten it.")
+
         contrast = st.slider("Contrast", 0.1, 3.0, 1.0, 0.1)
+        if show_explanations:
+            st.caption("Increases or reduces the difference between light and dark areas. Useful before thresholding when tones are flat.")
+
         sharpen_strength = st.slider("Sharpen", 0.0, 3.0, 0.0, 0.05)
+        if show_explanations:
+            st.caption("Applies a Laplacian convolution kernel to emphasize edges. Set to 0 to disable.")
 
     with st.sidebar.expander("Segmentation", expanded=True):
         detect_edges = st.checkbox("Enable segmentation pipeline", value=True)
+        if show_explanations:
+            st.caption("Runs Canny edge detection, thresholding, and contour analysis on the current image.")
+
         blur_strength = st.slider("Gaussian blur", 1, 15, 1, 2)
+        if show_explanations:
+            st.caption("Smooths the image and reduces small intensity variations. Useful before edge detection when noise creates unwanted edges.")
+
         auto_threshold = st.checkbox("Use Otsu thresholding", value=False)
+        if show_explanations:
+            st.caption("Otsu automatically finds the optimal threshold from the image histogram. Use it when the histogram has two clear peaks.")
 
         if not auto_threshold:
             manual_threshold = st.slider("Threshold", 0, 255, 128, 1)
+            if show_explanations:
+                st.caption("Pixels above this value become white; pixels below become black. Adjust until the region of interest separates cleanly.")
         else:
             manual_threshold = 128
             st.caption("Otsu thresholding active")
 
         min_area = st.slider("Minimum object area", 0, 1000, 100, 5)
+        if show_explanations:
+            st.caption("Filters out small detected regions. Increase it when thresholding produces many small unwanted regions.")
 
     # Image Processing Pipeline
     processed_image = apply_enhancements(image, brightness, contrast, sharpen_strength)
@@ -240,12 +263,17 @@ def main():
             value=default_roi_size,
             step=5
         )
+        if show_explanations:
+            st.caption("Size in pixels of the square region to inspect. Statistics and histogram in the ROI tab apply only to this area.")
 
         max_x = max(0, img_width - roi_size)
         max_y = max(0, img_height - roi_size)
 
         roi_x = st.slider("ROI X position", 0, max_x, min(img_width // 4, max_x), 1)
         roi_y = st.slider("ROI Y position", 0, max_y, min(img_height // 4, max_y), 1)
+        if show_explanations:
+            st.caption("Horizontal and vertical position of the top-left corner of the ROI box.")
+
 
     roi_pixels = gray_array[roi_y : roi_y + roi_size, roi_x : roi_x + roi_size]
 
